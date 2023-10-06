@@ -442,13 +442,13 @@ def Recursion_Seq(seq_str):
   HM.append(hydrophobic_moment_vector)
   NHM.append(normalized_hydrophobic_moment)
   return
-process=84
+process=0 #process=? Write the start process index here to see the output state during running
 '''
 Recursion_Seq(ans[0])
 Recursion_Seq(ans[1])
 Recursion_Seq(ans[2])
 '''
-'''
+
 for i in range(0,len(ans)//2):
   process+=1
   print("Starting Process "+str(process))
@@ -461,7 +461,7 @@ for i in range(len(ans)//2,len(ans)):
   print("Starting Process "+str(process))
   Recursion_Seq(ans[i])
   print("Process "+str(process)+" finish")
-
+'''
 
 
 #for item in ans:
