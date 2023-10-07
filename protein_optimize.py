@@ -25,6 +25,7 @@ from sys import version_info
 python_version = f"{version_info.major}.{version_info.minor}"
 seq_test="MCCNRGKNVSIENLHQGFTHIFESTFESTEGVAEYVSHPSHVEYANLFLANLEKVLVIDYKPTTVRV" #@param {type:"string"}
 hr = ["R", "D", "H", "N", "E", "Q", "K"] #@param hr {type:"string", description:"hydrophobic residues that need to be changed, write in list format"}
+ranges=[(11,25),(29,37),(39,56)]#@param hr {type:"string", description:"helices locations, write in list format, this is an example of location 11-25 29-37 39-56"}
 results=[]
 TL=[]
 TH=[]
@@ -88,8 +89,7 @@ def generate_replacements(sequence, ranges, replace_chars):
 
     return results
 
-ranges_test_3=[(1,2)]
-ans=generate_replacements(seq_test, ranges_test_3, hr)
+ans=generate_replacements(seq_test, ranges, hr)
 
 
 
