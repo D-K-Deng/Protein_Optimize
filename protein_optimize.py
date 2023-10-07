@@ -23,34 +23,76 @@ from sys import version_info
 
 
 python_version = f"{version_info.major}.{version_info.minor}"
-
-hr = ["R", "D", "H", "N", "E", "Q", "K"]
-#11-25  29-37 39-56
+seq_test="MCCNRGKNVSIENLHQGFTHIFESTFESTEGVAEYVSHPSHVEYANLFLANLEKVLVIDYKPTTVRV" #@param {type:"string"}
+hr = ["R", "D", "H", "N", "E", "Q", "K"] #@param hr {type:"string", description:"hydrophobic residues that need to be changed, write in list format"}
 results=[]
-ans=[]
 TL=[]
 TH=[]
 PC=[]
 HM=[]
 NHM=[]
 
+#Sequence Generation
 
-seq_test="MCCNRGKNVSIENLHQGFTHIFESTFESTEGVAEYVSHPSHVEYANLFLANLEKVLVIDYKPTTVRV"
-for i in range(0,len(seq_test)):
-    if ((i>=5 and i<=61) and (seq_test[i] in hr) and (seq_test[i]!="K")):
-        results.append(seq_test[:i]+"K"+seq_test[i+1:])
-for j in results:
-    ans.append(j)
-count=0
-while (count<=16):
-    count+=1
-    for i in range(0,len(ans[count])):
-        if ((i>=5 and i<=61) and (ans[count][i] in hr) and (ans[count][i]!="K")):
-            s=ans[count][:i]+"K"+ans[count][i+1:]
-            if s not in ans:
-                ans.append(s)
+def get_actual_ranges(ranges, length):
+    """Compute the actual replacement ranges considering boundaries and overlaps."""
+    actual_ranges = []
+    for start, end in ranges:
+        actual_start = max(1, start - 5)
+        actual_end = min(length, end + 5)
+        actual_ranges.append((actual_start, actual_end))
 
-ans.insert(0,seq_test)
+    # Merge overlapping ranges
+    merged_ranges = []
+    sorted_ranges = sorted(actual_ranges, key=lambda x: x[0])
+    for r in sorted_ranges:
+        if not merged_ranges or r[0] > merged_ranges[-1][1]:
+            merged_ranges.append(r)
+        else:
+            merged_ranges[-1] = (merged_ranges[-1][0], max(merged_ranges[-1][1], r[1]))
+
+    return merged_ranges
+
+def replace_in_range(sequence, start, end, replace_chars):
+    """Find all possible replacements in the given range."""
+    # Find positions of replaceable characters in the given range
+    replace_positions = [i for i in range(start, end + 1) if sequence[i-1] in replace_chars]
+
+    results = []
+    if not replace_positions:
+        return [sequence]
+
+    for pos in replace_positions:
+        # Replace one character
+        new_seq = sequence[:pos-1] + 'K' + sequence[pos:]
+        results.append(new_seq)
+
+        # Replace two characters
+        for sec_pos in replace_positions:
+            if sec_pos > pos:
+                new_seq_2 = new_seq[:sec_pos-1] + 'K' + new_seq[sec_pos:]
+                results.append(new_seq_2)
+
+    return results
+
+def generate_replacements(sequence, ranges, replace_chars):
+    """Generate all possible replacements for the given sequence."""
+    actual_ranges = get_actual_ranges(ranges, len(sequence))
+    results = [sequence]
+
+    for start, end in actual_ranges:
+        new_results = []
+        for seq in results:
+            new_results.extend(replace_in_range(seq, start, end, replace_chars))
+        results = new_results
+
+    return results
+
+ranges_test_3=[(1,2)]
+ans=generate_replacements(seq_test, ranges_test_3, hr)
+
+
+
 
 
 def Recursion_Seq(seq_str):
@@ -58,8 +100,8 @@ def Recursion_Seq(seq_str):
 
   def add_hash(x,y):
     return x+"_"+hashlib.sha1(y.encode()).hexdigest()[:5]
-  query_sequence = seq_str #@param {type:"string"}
-  jobname = 'test' #@param {type:"string"}
+  query_sequence = seq_str
+  jobname = 'test'
   # number of models to use
   num_relax = 1
   template_mode = "none"
@@ -362,6 +404,7 @@ def Recursion_Seq(seq_str):
 
   # Load the protein structure from a PDB file
   parser = PDBParser(QUIET=True)
+
   try:
     structure = parser.get_structure("protein", pdb_file_path)  # Replace with your PDB file path
   except:
@@ -448,12 +491,14 @@ Recursion_Seq(ans[0])
 Recursion_Seq(ans[1])
 Recursion_Seq(ans[2])
 '''
+#The program use extremely large RAM, you can split the data and run seperately if you don't have enough RAM
 
 for i in range(0,len(ans)//2):
   process+=1
   print("Starting Process "+str(process))
   Recursion_Seq(ans[i])
   print("Process "+str(process)+" finish")
+
 
 '''
 for i in range(len(ans)//2,len(ans)):
