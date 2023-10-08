@@ -7,6 +7,12 @@ Original file is located at
     https://colab.research.google.com/drive/1Tt8C4luBrg329PavxfKvxC6b-BgmE3LR
 """
 
+#@title Pre Process
+seq_test="MCCNRGKNVSIENLHQGFTHIFESTFESTEGVAEYVSHPSHVEYANLFLANLEKVLVIDYKPTTVRV" #@param {type:"string"}
+hr = ["R", "D", "H", "N", "E", "Q", "K"] #@param hr {type:"string", description:"hydrophobic residues that need to be changed, write in list format"}
+ranges=[(11,25),(29,37),(39,56)]#@param hr {type:"string", description:"helices locations, write in list format, this is an example of location 11-25 29-37 39-56"}
+change_redisue_to="K" #@param {type:"string"}
+
 #@title Main Process
 import locale
 def getpreferredencoding(do_setlocale = True):
@@ -21,12 +27,7 @@ import random
 import pandas as pd
 from sys import version_info
 
-
 python_version = f"{version_info.major}.{version_info.minor}"
-seq_test="MCCNRGKNVSIENLHQGFTHIFESTFESTEGVAEYVSHPSHVEYANLFLANLEKVLVIDYKPTTVRV" #@param {type:"string"}
-hr = ["R", "D", "H", "N", "E", "Q", "K"] #@param hr {type:"string", description:"hydrophobic residues that need to be changed, write in list format"}
-ranges=[(11,25),(29,37),(39,56)]#@param hr {type:"string", description:"helices locations, write in list format, this is an example of location 11-25 29-37 39-56"}
-results=[]
 TL=[]
 TH=[]
 PC=[]
@@ -65,13 +66,13 @@ def replace_in_range(sequence, start, end, replace_chars):
 
     for pos in replace_positions:
         # Replace one character
-        new_seq = sequence[:pos-1] + 'K' + sequence[pos:]
+        new_seq = sequence[:pos-1] + change_redisue_to + sequence[pos:]
         results.append(new_seq)
 
         # Replace two characters
         for sec_pos in replace_positions:
             if sec_pos > pos:
-                new_seq_2 = new_seq[:sec_pos-1] + 'K' + new_seq[sec_pos:]
+                new_seq_2 = new_seq[:sec_pos-1] + change_redisue_to + new_seq[sec_pos:]
                 results.append(new_seq_2)
 
     return results
@@ -90,7 +91,7 @@ def generate_replacements(sequence, ranges, replace_chars):
     return results
 
 ans=generate_replacements(seq_test, ranges, hr)
-
+ans.insert(0,seq_test)
 
 
 
@@ -231,7 +232,7 @@ def Recursion_Seq(seq_str):
   if max_msa == "auto": max_msa = None
   save_all = False
   save_recycles = False
-  save_to_google_drive = False #@param {type:"boolean"}
+  save_to_google_drive = False
   dpi = 200
   if save_to_google_drive:
     from pydrive.drive import GoogleDrive
@@ -244,7 +245,7 @@ def Recursion_Seq(seq_str):
     drive = GoogleDrive(gauth)
     print("You are logged into Google Drive and are good to go!")
   #@title Run Prediction
-  display_images = False #@param {type:"boolean"}
+  display_images = False
 
   import sys
   import warnings
@@ -485,7 +486,7 @@ def Recursion_Seq(seq_str):
   HM.append(hydrophobic_moment_vector)
   NHM.append(normalized_hydrophobic_moment)
   return
-process=0 #process=? Write the start process index here to see the output state during running
+process=0 #process=? Write the start process index-1 here to see the output state during running
 '''
 Recursion_Seq(ans[0])
 Recursion_Seq(ans[1])
