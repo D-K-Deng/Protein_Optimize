@@ -38,11 +38,11 @@ import pandas as pd
 from sys import version_info
 # Getting Python's version information
 python_version = f"{version_info.major}.{version_info.minor}"
-TL=[]
-TH=[]
-PC=[]
-HM=[]
-NHM=[]
+TL=[] #store lyticity index of all sequences
+TH=[] #store total hydrophobicity of all sequences
+PC=[] #store peptide charge at pH 7.0 of all sequences
+HM=[] #store hydrophobicity moment vector of all sequences
+NHM=[]  #store Normalized Direction Vector of all sequences
 
 #Sequence Generation
 
@@ -102,6 +102,7 @@ def generate_replacements(sequence, ranges, replace_chars):
 ans=generate_replacements(seq_input, ranges, substitutes)
 # Adding the original sequence to the beginning of the results list
 ans.insert(0,seq_input)
+#the ans list stores the original sequence following with all replaced sequences
 
 def Recursion_Seq(seq_str):
   #override to refresh the os everytime
@@ -512,7 +513,7 @@ process=0 #process=? Write the start process index-1 here to see the output stat
 #The program use extremely large RAM, you can split the data and run seperately if you don't have enough RAM
 print("There are "+ str(len(ans))+ " tasks in total, if it is bigger than 100, you may want to split the task into multiple tasks to avoid running of RAM, see line 494 for more info")
 
-#Example of how to separate task:
+#Example of how to separate task (This is an example of splitting the data in to two parts, run the first half of the list first, then the second half, just to make sure the dataset is small):
 '''
 for i in range(0,len(ans)//2):
   process+=1
