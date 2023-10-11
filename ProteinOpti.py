@@ -11,7 +11,7 @@ Original file is located at
 
 
 The ‘seq_input’ is the input of the sequence that you would like to run. The ‘substitutes’ are the residues that user would like to replace. It allows user to set multiple residues. The ‘ranges’ is the area that the user would like to substitutes residues. This also allows user to set multiple ranges. The ‘change_residue_to’ is the target residue that the user would like to replace with.
-Part of this software, ProteinOpti, is a modified version of ColabFold, which was developed by Sergey Ovchinnikov.
+Part of this software, ProteinOpti, is a modified version of ColabFold, which was developed by Sergey OvchinnikovPart and is licensed under the MIT License.
 """
 
 #@title Pre Process
