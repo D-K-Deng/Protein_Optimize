@@ -4,4 +4,4 @@ When trying to optimize protein designs, scientists usually want to try differen
   Predict the structure of these variants.
   Evaluate their properties to guide further optimization.
 This code was envisioned as a one-stop solution to address these requirements, reducing protein optimization's complexity and time overhead.
-This software tool allows users to simply use Google Colab and run online with simple sequence input to get multiple properties of the variant sequence. The current version allows users to modify the residues they would like to change, and it will automatically generate the variant sequence properties based on 1/2-time replacement of the changing residues.
+This software tool allows users to simply use Google Colab and run online with simple sequence input to get multiple properties of the variant sequence. The current version allows users to modify the residues they would like to change, and it will automatically generate the variant sequence properties based on any-time replacement of the changing residues.
